@@ -732,7 +732,7 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
         if (!useOpenVPN3) {
             try {
                 // Give thread a moment to fully start before checking state
-                Thread.sleep(100);
+                Thread.sleep(500);
                 
                 // Check if process thread is still running before trying to get stdin
                 synchronized (mProcessLock) {
