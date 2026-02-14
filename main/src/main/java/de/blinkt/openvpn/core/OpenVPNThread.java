@@ -61,7 +61,9 @@ public class OpenVPNThread implements Runnable {
     }
 
     public void stopProcess() {
-        mProcess.destroy();
+        if (mProcess != null) {
+            mProcess.destroy();
+        }
     }
 
     void setReplaceConnection()
@@ -205,6 +207,11 @@ public class OpenVPNThread implements Runnable {
     }
 
     public OutputStream getOpenVPNStdin() throws ExecutionException, InterruptedException {
-        return mStreamFuture.get();
+        try {
+            return mStreamFuture.get();
+        } catch (java.util.concurrent.CancellationException e) {
+            Log.e(TAG, "Stream future was cancelled", e);
+            throw new ExecutionException("OpenVPN process failed to start", e);
+        }
     }
 }
