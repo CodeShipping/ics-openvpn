@@ -61,9 +61,7 @@ public class OpenVPNThread implements Runnable {
     }
 
     public void stopProcess() {
-        if (mProcess != null) {
-            mProcess.destroy();
-        }
+        mProcess.destroy();
     }
 
     void setReplaceConnection()
@@ -207,11 +205,6 @@ public class OpenVPNThread implements Runnable {
     }
 
     public OutputStream getOpenVPNStdin() throws ExecutionException, InterruptedException {
-        try {
-            return mStreamFuture.get();
-        } catch (java.util.concurrent.CancellationException e) {
-            Log.e(TAG, "Stream future was cancelled", e);
-            throw new ExecutionException("Stream future was cancelled before process started", e);
-        }
+        return mStreamFuture.get();
     }
 }
