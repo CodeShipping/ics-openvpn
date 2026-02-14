@@ -731,6 +731,14 @@ public class OpenVPNService extends VpnService implements StateListener, Callbac
 
         if (!useOpenVPN3) {
             try {
+                // Check if process thread is still running before trying to get stdin
+                synchronized (mProcessLock) {
+                    if (mProcessThread == null || !mProcessThread.isAlive()) {
+                        VpnStatus.logError("Process thread terminated before config could be written");
+                        endVpnService();
+                        return;
+                    }
+                }
                 mProfile.writeConfigFileOutput(this, ((OpenVPNThread) processThread).getOpenVPNStdin());
             } catch (IOException | ExecutionException | InterruptedException e) {
                 VpnStatus.logException("Error generating config file", e);
